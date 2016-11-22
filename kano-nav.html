@@ -1,0 +1,326 @@
+<link rel="import" href="../iron-media-query/iron-media-query.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<!--
+
+`kano-nav` is the Kano Universe designed nav bar to provide navigation
+across all kano online products. It also displays user navigation and notifications
+
+Example:
+
+    <kano-nav assets-path="./assets/navbar/" fixed></kano-nav>
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--kano-nav-highlight-color` | Color of the bottom/left border of selected nav items | `#66bed3`
+`--kano-nav` | Mixin applied to the nav bar | `{}`
+
+@group Kano Elements
+@hero hero.svg
+@demo demo/kano-nav.html
+-->
+<dom-module id="kano-nav">
+    <style>
+    @keyframes slideInLeft {
+        from {
+            transform: translate3d(-100%, 0, 0);
+            visibility: visible;
+        }
+        to {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+    :host {
+        display: block;
+        font-smoothing: antialiased;
+        @apply(--layout-vertical);
+        --kano-nav-highlight-color: #44423d;
+        font-family: var(--kano-nav-font-family);
+        font-weight: bold;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        position: relative;
+        z-index: 100;
+    }
+    /* Buttons will keep their font family unless you target them directly */
+    button {
+        font-family: var(--kano-nav-font-family);
+    }
+    *[hidden] {
+        display: none !important;
+    }
+    iron-icon {
+        --iron-icon-width: 16px;
+        --iron-icon-height: 16px;
+    }
+    :host ul {
+        list-style: none;
+        margin: 0px;
+        padding: 0px;
+    }
+    .page-width {
+        box-sizing: border-box;
+        position: relative;
+        margin: auto;
+        max-width: 1400px;
+        padding: 0 20px;
+        @apply(--layout-flex);
+        @apply(--layout-horizontal);
+        @apply(--layout-justify);
+        @apply(--kano-nav);
+    }
+    :host nav {
+        @apply(--layout-flex);
+        @apply(--layout-vertical);
+        background: #fff;
+        display: block;
+        box-shadow: 0 0 5px rgba(0,0,0,0.15);
+    }
+    :host .navbar--relative {
+        position: relative;
+    }
+    :host .navbar--fixed {
+        transition: 0.3s ease;
+    }
+    :host .navbar--fixed.navbar--visible {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+    :host .navbar--fixed.navbar--hidden {
+        top: -60px;
+    }
+    .slideInLeft {
+        animation-name: slideInLeft;
+        animation-duration: 0.5s;
+        animation-fill-mode: both;
+    }
+    :host .hamburger {
+        border: 0px;
+        background-color: transparent;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        display: none;
+        padding: 0px 16px;
+        cursor: pointer;
+    }
+    :host .hamburger:focus {
+        background-color: #eee;
+        outline: none;
+    }
+    :host .hamburger img {
+        height: 16px;
+    }
+    :host .logo {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+        margin-right: calc(4vw - 20px);
+        align-items: center;
+        height: 100%;
+    }
+    :host .logo .link {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+    }
+    :host .logo img {
+        margin-top: 5px;
+        width: 70px;
+        height: 35px;
+    }
+    :host .left,
+    :host .right,
+    :host .user {
+        height: 60px;
+    }
+    :host .right,
+    :host .user {
+        @apply(--layout-end-justified);
+    }
+    @media screen and (min-width: 768px) {
+        :host .center {
+            @apply(--layout-center);
+            @apply(--layout-flex-3);
+            @apply(--layout-horizontal);
+            @apply(--layout-justified);
+        }
+    }
+    @media screen and (max-width: 768px) {
+        :host .logo img {
+            margin-bottom: 2px;
+            margin-top: 0px;
+        }
+        :host .no-mobile {
+            display: none;
+        }
+        :host .page-width {
+            height: auto;
+            padding: 0px;
+            padding-top: 60px;
+        }
+        :host .hamburger {
+            display: flex;
+            height: 100%;
+            left: 0;
+            position: absolute;
+            top: 0;
+        }
+        :host .overlay {
+          background-color: rgba(0, 0, 0, 0.4);
+          height: 100%;
+          left: 0;
+          position: fixed;
+          top: 0;
+          width: 100%;
+          z-index: 80;
+        }
+        :host .center {
+            @apply(--layout-justified);
+            @apply(--layout-vertical);
+            background-color: #ffffff;
+            height: 100%;
+            left: 0;
+            min-width: 220px;
+            position: fixed;
+            top: 0;
+            width: 60%;
+            z-index: 100;
+        }
+        :host .center[hidden] {
+            animation-name: slideOutLeft;
+            animation-duration: 0.5s;
+            animation-fill-mode: both;
+        }
+        :host .right,
+        :host .left {
+            position: absolute;
+            top: 0px;
+        }
+        :host .left {
+            width: 100%;
+        }
+        :host .right {
+            right: 0px;
+        }
+        :host .left {
+            left: 0px;
+        }
+        :host .logo {
+            margin: auto;
+        }
+        :host .logo .link {
+            padding: 0 10px;
+        }
+    }
+    </style>
+    <template>
+        <iron-media-query query="(max-width: 768px)" query-matches="{{isMobile}}"></iron-media-query>
+        <nav id="navbar" class$="navbar [[_computeMenuClass(fixed, visible)]]">
+            <div class="page-width">
+                <div class="left">
+                    <button class="hamburger slideInLeft" on-tap="_toggleMenu">
+                        <img src$="[[assetsPath]]hamburger.svg" />
+                    </button>
+                    <div class="logo">
+                        <a href="/" class="link">
+                            <img src$="[[assetsPath]]kano_logo.svg" alt="" />
+                        </a>
+                    </div>
+                </div>
+                <div class="overlay" hidden$="[[!_isMenuOpened(isMobile, menuOpened)]]" on-tap="_toggleMenu"></div>
+                <div class="center" hidden$="[[!_isMenuOpened(isMobile, menuOpened)]]">
+                    <slot id="primary" name="primary"></slot>
+                    <slot id="secondary" name="secondary"></slot>
+                </div>
+                <div class="right">
+                    <slot id="right" name="right"></slot>
+                </div>
+            </div>
+        </nav>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'kano-nav',
+        properties: {
+            /**
+             * Path to the assets required by this components
+             */
+            assetsPath: {
+                type: String,
+                value: '/'
+            },
+            /**
+             * Is the left menu opened
+             */
+            fixed: {
+                type: Boolean,
+                value: false
+            },
+            /**
+             * Is the nav-bar being displayed on a mobile device
+             */
+            isMobile: {
+                type: Boolean,
+                value: false,
+                notify: true,
+                reflectToAttribute: true
+            },
+            /**
+             * Is the left menu opened
+             */
+            menuOpened: {
+                type: Boolean,
+                value: false,
+                notify: true
+            },
+            /**
+             * Is the left menu opened
+             */
+            scrollPosition: {
+                type: Number,
+                value: 0
+            },
+            /**
+             * Is the left menu opened
+             */
+            visible: {
+                type: Boolean,
+                value: true
+            }
+        },
+        attached () {
+            this.listen(document, 'scroll', '_onDocumentScroll');
+        },
+        detached () {
+            this.unlisten(document, 'scroll', '_onDocumentScroll');
+        },
+        ready () {
+            if (window.location.pathname === '/') {
+                this.toggleClass('selected', true, this.$['logo']);
+            }
+        },
+        _computeMenuClass (fixed, visible) {
+            if (fixed) {
+                return visible ? 'navbar--fixed navbar--visible' : 'navbar--fixed navbar--hidden';
+            } else {
+                return 'navbar--relative';
+            }
+        },
+        _onDocumentScroll (e) {
+            let scrollPosition = window.scrollY || window.pageYOffset;
+            let offset = window.innerHeight * 0.25;
+            if (scrollPosition < offset || scrollPosition < this.scrollPosition) {
+                this.visible = true;
+            } else {
+                this.visible = false;
+            };
+            this.scrollPosition = scrollPosition;
+        },
+        _toggleMenu () {
+            this.menuOpened = !this.menuOpened;
+        },
+        _isMenuOpened (isMobile, menuOpened) {
+            return isMobile && menuOpened || !isMobile;
+        }
+    });
+</script>
