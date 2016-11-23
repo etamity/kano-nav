@@ -1,3 +1,4 @@
+<link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <!--
@@ -30,12 +31,14 @@ Custom property | Description | Default
         }
     }
     :host {
+        --kano-nav-font-family: 'bariol', Helvetica, Arial, sans-serif;
         display: block;
         font-smoothing: antialiased;
         @apply(--layout-vertical);
         --kano-nav-highlight-color: #44423d;
         font-family: var(--kano-nav-font-family);
         font-weight: bold;
+        height: 60px;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         position: relative;
@@ -57,7 +60,7 @@ Custom property | Description | Default
         margin: 0px;
         padding: 0px;
     }
-    .page-width {
+    .wrapper {
         box-sizing: border-box;
         position: relative;
         margin: auto;
@@ -137,6 +140,9 @@ Custom property | Description | Default
         @apply(--layout-end-justified);
     }
     @media screen and (min-width: 768px) {
+        :host .wrapper {
+            height: 60px;
+        }
         :host .center {
             @apply(--layout-center);
             @apply(--layout-flex-3);
@@ -152,7 +158,7 @@ Custom property | Description | Default
         :host .no-mobile {
             display: none;
         }
-        :host .page-width {
+        :host .wrapper {
             height: auto;
             padding: 0px;
             padding-top: 60px;
@@ -215,7 +221,7 @@ Custom property | Description | Default
     <template>
         <iron-media-query query="(max-width: 768px)" query-matches="{{isMobile}}"></iron-media-query>
         <nav id="navbar" class$="navbar [[_computeMenuClass(fixed, visible)]]">
-            <div class="page-width">
+            <div class="wrapper">
                 <div class="left">
                     <button class="hamburger slideInLeft" on-tap="_toggleMenu">
                         <img src$="[[assetsPath]]hamburger.svg" />
@@ -288,25 +294,25 @@ Custom property | Description | Default
                 value: true
             }
         },
-        attached () {
+        attached: function () {
             this.listen(document, 'scroll', '_onDocumentScroll');
         },
-        detached () {
+        detached: function () {
             this.unlisten(document, 'scroll', '_onDocumentScroll');
         },
-        ready () {
+        ready: function () {
             if (window.location.pathname === '/') {
                 this.toggleClass('selected', true, this.$['logo']);
             }
         },
-        _computeMenuClass (fixed, visible) {
+        _computeMenuClass: function (fixed, visible) {
             if (fixed) {
                 return visible ? 'navbar--fixed navbar--visible' : 'navbar--fixed navbar--hidden';
             } else {
                 return 'navbar--relative';
             }
         },
-        _onDocumentScroll (e) {
+        _onDocumentScroll: function (e) {
             let scrollPosition = window.scrollY || window.pageYOffset;
             let offset = window.innerHeight * 0.25;
             if (scrollPosition < offset || scrollPosition < this.scrollPosition) {
@@ -316,10 +322,10 @@ Custom property | Description | Default
             };
             this.scrollPosition = scrollPosition;
         },
-        _toggleMenu () {
+        _toggleMenu: function () {
             this.menuOpened = !this.menuOpened;
         },
-        _isMenuOpened (isMobile, menuOpened) {
+        _isMenuOpened: function (isMobile, menuOpened) {
             return isMobile && menuOpened || !isMobile;
         }
     });
