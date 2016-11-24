@@ -8,11 +8,10 @@ across all kano online products. It also displays user navigation and notificati
 
 Example:
 
-    <kano-nav assets-path="./assets/navbar/" fixed></kano-nav>
+    <kano-nav assets-path="./assets/navbar/" fixed site-root="/"></kano-nav>
 
 Custom property | Description | Default
 ----------------|-------------|----------
-`--kano-nav-highlight-color` | Color of the bottom/left border of selected nav items | `#66bed3`
 `--kano-nav` | Mixin applied to the nav bar | `{}`
 
 @group Kano Elements
@@ -227,7 +226,7 @@ Custom property | Description | Default
                         <img src$="[[assetsPath]]hamburger.svg" />
                     </button>
                     <div class="logo">
-                        <a href="/" class="link">
+                        <a href="[[siteRoot]]" class="link">
                             <img src$="[[assetsPath]]kano_logo.svg" alt="" />
                         </a>
                     </div>
@@ -256,7 +255,7 @@ Custom property | Description | Default
                 value: '/'
             },
             /**
-             * Is the left menu opened
+             * Should the menu be fixed?
              */
             fixed: {
                 type: Boolean,
@@ -280,14 +279,21 @@ Custom property | Description | Default
                 notify: true
             },
             /**
-             * Is the left menu opened
+             * Current scroll position for fixed nav
              */
             scrollPosition: {
                 type: Number,
                 value: 0
             },
             /**
-             * Is the left menu opened
+             * Current scroll position for fixed nav
+             */
+            siteRoot: {
+                type: String,
+                value: '/'
+            },
+            /**
+             * Whether the nav is visible or hidden when fixed
              */
             visible: {
                 type: Boolean,
