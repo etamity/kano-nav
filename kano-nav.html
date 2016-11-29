@@ -319,8 +319,8 @@ Custom property | Description | Default
             }
         },
         _onDocumentScroll: function (e) {
-            let scrollPosition = window.scrollY || window.pageYOffset;
-            let offset = window.innerHeight * 0.25;
+            var scrollPosition = window.scrollY || window.pageYOffset;
+            var offset = window.innerHeight * 0.25;
             if (scrollPosition < offset || scrollPosition < this.scrollPosition) {
                 this.visible = true;
             } else {
